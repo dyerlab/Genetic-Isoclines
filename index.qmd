@@ -1,0 +1,43 @@
+---
+title: "Directional Gene Flow: Uncovering Directionality in Population Graph Topologies"
+format: html
+editor: 
+  visual: true
+  render-on-save: true 
+author:
+  - name: Rodney J. Dyer
+    orcid: 0000-0003-4707-3453
+    corresponding: true 
+    email: rjdyer@vcu.edu
+    affiliation: 
+      - name: Virginia Commonwealth University
+        department: School of Life Sciences and Sustainability
+        city: Richmond
+        state: VA
+        url: https://slss.vcu.edu
+keywords: Asymmetric Gene Flow, Population Graphs, Directionality, Genetic Connectivity
+copyright: 
+  holder: Rodney J. Dyer
+  year: 2025
+bibliography: export.bib
+funding: "The author received no specific funding for this work."
+abstract: |
+  This manuscript develops a novel 
+---
+
+## Introduction
+
+Population graphs are a multivariate approach to quantifying the conditional covariance of standing genetic structure [@Dyer2004; @Dyer2015] and have been used for both adult structure \[@Baker2011\] and for analysis of pollen pool connectivity [@Dileo2014].
+
+## Methods
+
+## Results
+
+## Discussion
+
+## References
+
+::: {#refs}
+:::
+
+## Appendix {.backmatter}
