@@ -1,5 +1,5 @@
 ---
-title: "Directional Gene Flow: Uncovering Directionality in Population Graph Topologies"
+title: "Ideosyncratic Genetic Neighborhood: {some other part or rename...}"
 format: html
 editor: 
   visual: true
@@ -15,21 +15,136 @@ author:
         city: Richmond
         state: VA
         url: https://slss.vcu.edu
+  - name: Brian C. Verrelli
+    orcid: 0000-0003-4707-3453
+    corresponding: true 
+    email: bverrelli@vcu.edu
+    affiliation: 
+      - name: Virginia Commonwealth University
+        department: School of Life Sciences and Sustainability
+        city: Richmond
+        state: VA
+        url: https://slss.vcu.edu        
 keywords: Asymmetric Gene Flow, Population Graphs, Directionality, Genetic Connectivity
 copyright: 
   holder: Rodney J. Dyer
   year: 2025
 bibliography: export.bib
-funding: "The author received no specific funding for this work."
+funding: "The authors received no specific funding for this work."
 abstract: |
-  This manuscript develops a novel 
+  This manuscript develops a novel... 
 ---
+
+```{r}
+rm( list=ls() )
+library( gstudio )
+library( popgraph )
+library( igraph )
+library( tidyverse )
+library( knitr )
+library( kableExtra )
+
+library( leaflet )
+library( leaflet.extras )
+
+library( pegas )
+
+# pine data
+source("data/getPineData.R")
+```
 
 ## Introduction
 
-Population graphs are a multivariate approach to quantifying the conditional covariance of standing genetic structure [@Dyer2004; @Dyer2015] and have been used for both adult structure \[@Baker2011\] and for analysis of pollen pool connectivity [@Dileo2014].
+Population graphs are a multivariate approach to quantifying the conditional covariance of standing genetic structure [@Dyer2004; @Dyer2015] and have been used for both adult structure [@Baker2011] and for analysis of pollen pool connectivity [@Dileo2014].
 
 ## Methods
+
+### Model
+
+### Case Study: Adult Genetic Structure
+
+@Tassone2021
+
+### Case Study: Pollen Pool Structure
+
+```{r}
+# grab the raw data
+getPineData() -> df
+
+# make the coordinats
+df |>
+   strata_coordinates( stratum = "Family", 
+                       longitude = "X", latitude ="Y") |> 
+   filter( !is.na( Latitude ) ) |> 
+   rename(Family = Stratum, X = Longitude, Y = Latitude )  -> coords
+
+# Filter families on sample sizes (N>5) and missing coordinates
+merge( df, coords ) |> 
+  filter( !(Family %in% c("1953", "1954", "1958") ) ) |>
+  droplevels() |> 
+  mutate( Y = -1.0 * Y ) -> pines
+  
+
+pines |> 
+  ggplot( aes(X,Y, color=Treatment) ) + 
+  geom_point()  + 
+  coord_equal() + 
+  theme_void() + 
+  scale_colour_brewer(palette = "Set1",
+                      direction = -1)
+
+# separate out the three forst treatments
+pines |> 
+  filter( Treatment == "Forest" ) |>
+  select( -Treatment ) |>
+  droplevels() -> pine.forest
+pines |> 
+  filter( Treatment == "Selective" ) |>
+  select( -Treatment ) |>
+  droplevels() -> pine.selective
+pines |> 
+  filter( Treatment == "Clearcut" ) |>
+  select( -Treatment ) |>
+  droplevels() -> pine.clearcut
+```
+
+@dyerSork2001
+
+```{r}
+popgraph( to_mv( pine.forest ), 
+          pine.forest$Family ) |>
+  decorate_graph( coords, stratum="Family" ) -> g.forest 
+
+ggplot() + 
+  geom_nodeset( aes(X,Y), graph = g.forest ) + 
+  geom_edgeset( aes(X,Y), graph = g.forest ) + 
+  theme_void() + 
+  coord_equal() 
+```
+
+```{r}
+popgraph( to_mv( pine.selective), 
+          pine.selective$Family ) |>
+  decorate_graph( coords, stratum="Family" ) -> g.selective 
+ggplot() + 
+  geom_nodeset( aes(X,Y), graph = g.selective ) + 
+  geom_edgeset( aes(X,Y), graph = g.selective ) + 
+  theme_void() + 
+  coord_equal() 
+```
+
+```{r}
+popgraph( to_mv( pine.clearcut ), 
+          pine.clearcut$Family ) |>
+  decorate_graph( coords, stratum="Family" ) -> g.clearcut 
+
+ggplot() + 
+  geom_nodeset( aes(X,Y), graph = g.clearcut  ) + 
+  geom_edgeset( aes(X,Y), graph = g.clearcut  ) + 
+  theme_void() + 
+  coord_equal() 
+
+```
 
 ## Results
 
